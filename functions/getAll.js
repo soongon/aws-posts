@@ -1,16 +1,17 @@
 'use strict';
 
-exports.getAll = async (event) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'get all function',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+const AWS = require("aws-sdk");
+const docClient = new AWS.DynamoDB.DocumentClient();
 
+exports.getAll = async (event) => {
+  const params = {
+    TableName: "posts-app-dev"
+  }
+
+  try {
+      const result = await docClient.scan(params).promise();
+      return result;
+  } catch (err) {
+      return err;
+  }
 };
